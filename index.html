@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Biomass Estimator</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <style>
+    .glyphicon-refresh-animate {
+      -animation: spin .7s infinite linear;
+      -webkit-animation: spin2 .7s infinite linear;
+    }
+
+    @-webkit-keyframes spin2 {
+      from { -webkit-transform: rotate(0deg);}
+      to { -webkit-transform: rotate(360deg);}
+    }
+
+    @keyframes spin {
+      from { transform: scale(1) rotate(0deg);}
+      to { transform: scale(1) rotate(360deg);}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#prot" aria-controls="home" role="tab" data-toggle="tab">Protein</a></li>
+          <li role="presentation"><a href="#dna" aria-controls="profile" role="tab" data-toggle="tab">DNA</a></li>
+          <li role="presentation"><a href="#rna" aria-controls="messages" role="tab" data-toggle="tab">RNA</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="prot">
+            <div id="protein-container">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="protein_input">Protein FASTA file:</label>
+                  <div class="col-sm-10">
+                    <input id="protein_input" type="file" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="protein_input">Expression CSV file:</label>
+                  <div class="col-sm-10">
+                    <input id="gene_input" type="file" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="protein_ratio">Cellular content Protein:</label>
+                  <div class="col-sm-4">
+                    <input class="form-control" id="protein_ratio" type="text" />
+                  </div>
+                </div>
+                <button class="btn btn-success" onclick="estimateProtein();">
+                  Determine
+                </button>
+              </form>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="dna">
+            <div id="dna-container">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="dna_input">DNA FASTA file:</label>
+                  <div class="col-sm-10">
+                    <input id="dna_input" type="file" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="dna_ratio">Cellular content DNA:</label>
+                  <div class="col-sm-4">
+                    <input class="form-control" id="dna_ratio" type="text" />
+                  </div>
+                </div>
+                <button class="btn btn-success" onclick="estimateDna();">
+                  Determine
+                </button>
+              </form>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="rna">
+            <div id="rna-container">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="mrna_input">mRNA FASTA file:</label>
+                  <div class="col-sm-4">
+                    <input id="mrna_input" type="file" />
+                  </div>
+                  <label class="control-label col-sm-2" for="mrna_ratio">mRNA percentage:</label>
+                  <div class="col-sm-4">
+                    <input class="form-control" id="mrna_ratio" type="text" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="trna_input">tRNA FASTA file:</label>
+                  <div class="col-sm-4">
+                    <input id="trna_input" type="file" />
+                  </div>
+                  <label class="control-label col-sm-2" for="trna_ratio">tRNA percentage:</label>
+                  <div class="col-sm-4">
+                    <input class="form-control" id="trna_ratio" type="text" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="rrna_input">rRNA FASTA file:</label>
+                  <div class="col-sm-4">
+                    <input id="rrna_input" type="file" />
+                  </div>
+                  <label class="control-label col-sm-2" for="rrna_ratio">rRNA percentage:</label>
+                  <div class="col-sm-4">
+                    <input class="form-control" id="rrna_ratio" type="text" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="rna_ratio">Cellular content RNA:</label>
+                  <div class="col-sm-4">
+                    <input class="form-control" id="rna_ratio" type="text" />
+                  </div>
+                </div>
+                <button class="btn btn-success" onclick="estimateRna();">
+                  Determine
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div id="result">
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+</body>
+<script type="text/template" id="protein-template">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Amino Acids Content (mol/mol)</th>
+      <th>Biomass Composition Amino Acids (mmol/gDW)</th>
+    </tr>
+  </thead>
+  <tbody>
+  <%
+    _.each(aa, function(v, k) {
+   %>
+    <tr>
+      <td><%-v%></td>
+      <td><%-pContentm[k] %></td>
+      <td><%-pContentmmol_gDW[k] %></td>
+    </tr>
+  <%
+    });
+   %>
+  </tbody>
+</table>
+</script>
+<script type="text/template" id="dna-template">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>dNTP Content (mol/mol)</th>
+      <th>Biomass Composition dNTPs (mmol/gDW)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dATP</td>
+      <td><%-dnaContentm["A"] %></td>
+      <td><%-dnaContentmmol_gDW["A"] %></td>
+    </tr>
+    <tr>
+      <td>dTTP</td>
+      <td><%-dnaContentm["T"] %></td>
+      <td><%-dnaContentmmol_gDW["T"] %></td>
+    </tr>
+    <tr>
+      <td>dCTP</td>
+      <td><%-dnaContentm["C"] %></td>
+      <td><%-dnaContentmmol_gDW["C"] %></td>
+    </tr>
+    <tr>
+      <td>dGTP</td>
+      <td><%-dnaContentm["G"] %></td>
+      <td><%-dnaContentmmol_gDW["G"] %></td>
+    </tr>
+  </tbody>
+</table>
+</script>
+<script type="text/template" id="rna-template">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th></th>
+      <th>NTP Content (mol/mol)</th>
+      <th>Biomass Composition NTP (mmol/gDW)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ATP</td>
+      <td><%-rnaContentm_m["A"] %></td>
+      <td><%-rnaContentmmol_gDW["A"] %></td>
+    </tr>
+    <tr>
+      <td>UTP</td>
+      <td><%-rnaContentm_m["U"] %></td>
+      <td><%-rnaContentmmol_gDW["U"] %></td>
+    </tr>
+    <tr>
+      <td>CTP</td>
+      <td><%-rnaContentm_m["C"] %></td>
+      <td><%-rnaContentmmol_gDW["C"] %></td>
+    </tr>
+    <tr>
+      <td>GTP</td>
+      <td><%-rnaContentm_m["G"] %></td>
+      <td><%-rnaContentmmol_gDW["G"] %></td>
+    </tr>
+  </tbody>
+</table>
+</script>
+<script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+<script type="text/javascript" src="js/underscore-min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/biomass.js"></script>
+</html>
