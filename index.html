@@ -144,11 +144,36 @@
 
           </div>
           <div role="tabpanel" class="tab-pane" id="about">
-            <h3>Download</h3>
+            <h3>Biomass Composition</h3>
+            <p>The java application created is a tool that provides the estimation of biomass composition in nucleotides and amino acids, with input files containing sequences from DNA, RNA and protein, in the FASTA format. When expression data are available, it can also be used, provided in a csv file containing percentages of each gene/protein. The output of this tool are the amino acid, nucleotide and deoxynucleotide compositions in percentage and in mmol/gDW. These can be directly included in the biomass equation.<br>
+            To obtain the results it is only necessary to click in the “Determine” button. It is also possible to export the obtained data to a file in csv format, by clicking in the “Export” button.<br>
+            All data obtained can be easily exported to a csv file.<br>
+            This application allows to obtain the results rapidly and is also a user-friendly tool for users with any or little background in informatics.
+            </p>
+            <h3>Obligatory inputs</h3>
+            <ul>
+              <li>Input files with sequences of Proteins, DNA and RNA, exclusive in the FASTA format;
+                  Transcriptomic data, if available, in csv format, with two columns separated by semicolon:
+                the first column should contain gene identifiers and the second the expression factor in percentage.
+                In this case, the FASTA file with protein sequences should have the same gene identifiers at the
+                beginning of the sequence header;</li>
+              <li>Percentage (number between 0 and 1) of each type of RNA (mRNA, rRNA and tRNA);</li>
+              <li>Percentage of the cellular content in each macromolecule (Protein, DNA and RNA) in percentage (number between 0 and 1).</li>
+            </ul>
 
-            <h3>Publication</h3>
+            <h3>Examples</h3>
+            <p>Here are included examples of input files with sequences of Protein (<code>E.coli_AA.faa</code>), DNA (<code>E.coli_DNA.txt</code>)
+            and the 3 main types of RNA (<code>E.coli_mRNA.txt</code>, <code>E.coli_rRNA.txt</code>, <code>E.coli_tRNA.txt</code>), in the FASTA format, and with transcriptomic information
+            (<code>E.coli_Genedata.csv</code>), in csv format. All data is from the organism <i>Escherichia coli</i> K12 MG1655.<br>
+            The input percentage values required are included in the file <code>Input.csv</code>.<br>
+            The expected results are in the csv files with the prefix res (<code>res_Prot.csv</code>, <code>res_DNA.csv</code> and <code>res_RNA.csv</code>).</p>
+            <h3>Download</h3>
+            <h4>Java application:</h4>
+            <h4>Example input:</h4>
+            <h3>Publication </h3> <a href="http://link.springer.com/chapter/10.1007%2F978-3-319-40126-3_17"> A Computation Tool for the Estimation of Biomass Composition from Genomic and Transcriptomic Information </a>
             <h4>To cite:</h4>
-            xxxxxxx.xxxx
+            Santos, S., Rocha, I. (2016). A computation tool for the estimation of biomass composition from genomic and transcriptomic information. <br>
+            <i>In</i> Mohd Saberi Mohamad, Miguel P. Rocha, Florentino Fdez-Riverola, Francisco J. Domínguez Mayo, Juan F. De Paz. 10th International Conference on Practical Applications of Computational Biology & Bioinformatics, Vol. Advances in Intelligent Systems and Computing 477, Switzerland: Springer International Publishing, 2016. ISBN: 978-3-319-40125-6, 161-169.
           </div>
         </div>
 
