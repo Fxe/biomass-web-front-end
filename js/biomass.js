@@ -1,5 +1,5 @@
-//var biodb_server = 'http://darwin.di.uminho.pt:8080';
-var biodb_server = 'http://localhost:8080';
+var biodb_server = 'http://darwin.di.uminho.pt:8080';
+//var biodb_server = 'http://localhost:8080';
 var rest_end_point = biodb_server + '/biomass-web/';
 
 //CORS
